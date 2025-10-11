@@ -51,11 +51,16 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 15px;
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 40px auto;
       padding: 0 20px;
     }
 
+    @media (min-width: 1200px) {
+      .gallery {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
     .gallery img {
       width: 100%;
       height: auto;
