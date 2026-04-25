@@ -4,28 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Photography Portfolio</title>
-
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
+      color: #333;
     }
-
     header {
       background: #111;
       color: #fff;
       padding: 20px;
       text-align: center;
     }
-
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    header p {
+      margin: 5px 0 0;
+      font-size: 1.2rem;
+    }
+    
     .intro {
       background: #fff;
+      color: #333;
       max-width: 900px;
       margin: 40px auto;
       padding: 40px 20px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .intro h2 {
+      font-size: 2rem;
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #444;
     }
 
     .gallery {
@@ -45,161 +65,137 @@
 
     .gallery img {
       width: 100%;
+      height: auto;
       border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .gallery img:hover {
       transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     }
 
-    /* POPUP */
+    /* POPUP STYLES */
     .popup {
       display: none;
       position: fixed;
       z-index: 1000;
-      top: 0;
+      padding-top: 60px;
       left: 0;
+      top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.95);
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: rgba(0,0,0,0.9);
     }
 
-    .popup img {
+    .popup-content {
+      display: block;
+      margin: auto;
       max-width: 90%;
-      max-height: 90%;
+      max-height: 80%;
       border-radius: 10px;
     }
 
     .close {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 35px;
+      top: 20px;
+      right: 35px;
       color: white;
-      cursor: pointer;
-    }
-
-    .arrow {
-      position: absolute;
-      top: 50%;
       font-size: 40px;
-      color: white;
       cursor: pointer;
-      transform: translateY(-50%);
-      user-select: none;
-      padding: 10px;
     }
-
-    .left { left: 10px; }
-    .right { right: 10px; }
 
     footer {
       background: #111;
       color: #fff;
       text-align: center;
       padding: 15px;
+      margin-top: 20px;
     }
   </style>
 </head>
-
 <body>
 
-<header>
-  <h1>My Photography Portfolio</h1>
-  <p>Capturing moments through my lens</p>
-</header>
+  <header>
+    <h1>My Photography Portfolio</h1>
+    <p>Capturing moments through my lens</p>
+  </header>
+  
+  <section class="intro">
+    <h2>Welcome to My Photography Portfolio</h2>
+    <p>
+      Hi, I'm <strong>Anurag</strong> — a passionate photographer who loves capturing moments that tell stories.  
+      Through my lens, I explore the beauty of light, color, and emotion in everyday life.  
+      This collection showcases my journey across portraits, landscapes, and creative experiments.
+    </p>
+  </section>
 
-<section class="intro">
-  <h2>Welcome</h2>
-  <p>Hi, I'm <strong>Anurag</strong> —  a passionate photographer who loves capturing moments that tell stories.  
-    Through my lens, I explore the beauty of light, color, and emotion in everyday life.  
-    This collection showcases my journey across portraits, landscapes, and creative experiments.</p>
-</section>
+  <section class="gallery">
+    <img src="your-photo1.jpg">
+    <img src="your-photo2.jpg">
+    <img src="your-photo3.jpg">
+    <img src="your-photo4.jpg">
+    <img src="your-photo5.jpg">
+    <img src="your-photo6.jpg">
+    <img src="your-photo7.jpg">
+    <img src="your-photo8.jpg">
+    <img src="your-photo9.jpg">
+    <img src="your-photo10.jpg">
+    <img src="your-photo11.jpg">
+    <img src="your-photo12.jpg">
+    <img src="your-photo13.jpg">
+    <img src="your-photo14.jpg">
+    <img src="your-photo15.jpg">
+    <img src="your-photo16.jpg">
+    <img src="your-photo17.jpg">
+    <img src="your-photo18.jpg">
+    <img src="your-photo19.jpg">
+    <img src="your-photo20.jpg">
+    <img src="your-photo21.jpg">
+    <img src="your-photo22.jpg">
+    <img src="your-photo23.jpg">
+    <img src="your-photo24.jpg">
+    <img src="your-photo25.jpg">
+    <img src="your-photo26.jpg">
+    <img src="your-photo27.jpg">
+    <img src="your-photo28.jpg">
+    <img src="your-photo29.jpg">
+    <img src="your-photo30.jpg">
+    <img src="your-photo31.jpg">
+    <img src="your-photo32.jpg">
+    <img src="your-photo33.jpg">
+    <img src="your-photo34.jpg">
+    <img src="your-photo35.jpg">
+    <img src="your-photo36.jpg">
+  </section>
 
-<section class="gallery">
-  <img src="your-photo1.jpg">
-  <img src="your-photo2.jpg">
-  <img src="your-photo3.jpg">
-  <img src="your-photo4.jpg">
-  <img src="your-photo5.jpg">
-  <img src="your-photo6.jpg">
-  <img src="your-photo7.jpg">
-  <img src="your-photo8.jpg">
-</section>
+  <!-- POPUP -->
+  <div id="popup" class="popup">
+    <span class="close">&times;</span>
+    <img class="popup-content" id="popup-img">
+  </div>
 
-<!-- POPUP -->
-<div id="popup" class="popup">
-  <span class="close">&times;</span>
-  <span class="arrow left">&#10094;</span>
-  <img id="popup-img">
-  <span class="arrow right">&#10095;</span>
-</div>
+  <footer>
+    <p>© 2025 Anurag | Contact: anuragsinghofficial25@gmail.com</p>
+  </footer>
 
-<footer>
-  <p>© 2025 Anurag</p>
-</footer>
+  <script>
+    const images = document.querySelectorAll(".gallery img");
+    const popup = document.getElementById("popup");
+    const popupImg = document.getElementById("popup-img");
+    const closeBtn = document.querySelector(".close");
 
-<script>
-  const images = document.querySelectorAll(".gallery img");
-  const popup = document.getElementById("popup");
-  const popupImg = document.getElementById("popup-img");
-  const closeBtn = document.querySelector(".close");
-  const leftArrow = document.querySelector(".left");
-  const rightArrow = document.querySelector(".right");
-
-  let currentIndex = 0;
-
-  function showImage(index) {
-    if (index < 0) index = images.length - 1;
-    if (index >= images.length) index = 0;
-    currentIndex = index;
-    popupImg.src = images[currentIndex].src;
-  }
-
-  images.forEach((img, index) => {
-    img.addEventListener("click", () => {
-      popup.style.display = "flex";
-      showImage(index);
+    images.forEach(img => {
+      img.addEventListener("click", () => {
+        popup.style.display = "block";
+        popupImg.src = img.src;
+      });
     });
-  });
 
-  function closePopup() {
-    popup.style.display = "none";
-  }
-
-  rightArrow.onclick = (e) => {
-    e.stopPropagation();
-    showImage(currentIndex + 1);
-  };
-
-  leftArrow.onclick = (e) => {
-    e.stopPropagation();
-    showImage(currentIndex - 1);
-  };
-
-  closeBtn.onclick = (e) => {
-    e.stopPropagation();
-    closePopup();
-  };
-
-  popup.addEventListener("click", (e) => {
-    if (e.target === popup) closePopup();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (popup.style.display === "flex") {
-      if (e.key === "ArrowRight") showImage(currentIndex + 1);
-      if (e.key === "ArrowLeft") showImage(currentIndex - 1);
-      if (e.key === "Escape") closePopup();
-    }
-  });
-</script>
+    closeBtn.onclick = () => popup.style.display = "none";
+    popup.onclick = () => popup.style.display = "none";
+  </script>
 
 </body>
 </html>
