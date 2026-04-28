@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Photography Portfolio</title>
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
       color: #333;
     }
+
     header {
       background: #111;
       color: #fff;
@@ -25,7 +28,7 @@
       margin: 5px 0 0;
       font-size: 1.2rem;
     }
-    
+
     .intro {
       background: #fff;
       color: #333;
@@ -35,13 +38,11 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-
     .intro h2 {
       font-size: 2rem;
       color: #000;
       margin-bottom: 10px;
     }
-
     .intro p {
       font-size: 1.1rem;
       line-height: 1.6;
@@ -56,54 +57,106 @@
       margin: 40px auto;
       padding: 0 20px;
     }
-
     @media (min-width: 1200px) {
       .gallery {
         grid-template-columns: repeat(4, 1fr);
       }
     }
-
     .gallery img {
       width: 100%;
       height: auto;
       border-radius: 10px;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: block;
     }
-
     .gallery img:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
 
-    /* POPUP STYLES */
+    /* ── POPUP ── */
     .popup {
       display: none;
       position: fixed;
       z-index: 1000;
-      padding-top: 60px;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+    }
+    .popup.active {
+      display: flex;
     }
 
     .popup-content {
       display: block;
-      margin: auto;
-      max-width: 90%;
-      max-height: 80%;
+      max-width: 90vw;
+      max-height: 85vh;
+      width: auto;
+      height: auto;
       border-radius: 10px;
+      object-fit: contain;
+      transition: opacity 0.15s ease;
     }
 
     .close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: white;
-      font-size: 40px;
+      position: fixed;
+      top: 14px;
+      right: 22px;
+      color: #fff;
+      font-size: 42px;
+      line-height: 1;
       cursor: pointer;
+      user-select: none;
+      z-index: 1010;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .close:hover { color: #ccc; }
+
+    .arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.4);
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1010;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .arrow:hover { background: rgba(255,255,255,0.3); }
+    .arrow-prev { left: 12px; }
+    .arrow-next { right: 12px; }
+
+    .counter {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      z-index: 1010;
+      pointer-events: none;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6rem; }
+      .arrow { width: 40px; height: 40px; font-size: 20px; }
+      .arrow-prev { left: 6px; }
+      .arrow-next { right: 6px; }
     }
 
     footer {
@@ -121,12 +174,12 @@
     <h1>My Photography Portfolio</h1>
     <p>Capturing moments through my lens</p>
   </header>
-  
+
   <section class="intro">
     <h2>Welcome to My Photography Portfolio</h2>
     <p>
-      Hi, I'm <strong>Anurag</strong> — a passionate photographer who loves capturing moments that tell stories.  
-      Through my lens, I explore the beauty of light, color, and emotion in everyday life.  
+      Hi, I'm <strong>Anurag</strong> — a passionate photographer who loves capturing moments that tell stories.
+      Through my lens, I explore the beauty of light, color, and emotion in everyday life.
       This collection showcases my journey across portraits, landscapes, and creative experiments.
     </p>
   </section>
@@ -171,9 +224,12 @@
   </section>
 
   <!-- POPUP -->
-  <div id="popup" class="popup">
-    <span class="close">&times;</span>
-    <img class="popup-content" id="popup-img">
+  <div id="popup" class="popup" role="dialog" aria-modal="true">
+    <button class="close" id="closeBtn" aria-label="Close">&times;</button>
+    <button class="arrow arrow-prev" id="prevBtn" aria-label="Previous photo">&#8249;</button>
+    <img class="popup-content" id="popup-img" alt="Enlarged photo">
+    <button class="arrow arrow-next" id="nextBtn" aria-label="Next photo">&#8250;</button>
+    <div class="counter" id="counter"></div>
   </div>
 
   <footer>
@@ -181,20 +237,75 @@
   </footer>
 
   <script>
-    const images = document.querySelectorAll(".gallery img");
-    const popup = document.getElementById("popup");
+    const images   = Array.from(document.querySelectorAll(".gallery img"));
+    const popup    = document.getElementById("popup");
     const popupImg = document.getElementById("popup-img");
-    const closeBtn = document.querySelector(".close");
+    const closeBtn = document.getElementById("closeBtn");
+    const prevBtn  = document.getElementById("prevBtn");
+    const nextBtn  = document.getElementById("nextBtn");
+    const counter  = document.getElementById("counter");
 
-    images.forEach(img => {
-      img.addEventListener("click", () => {
-        popup.style.display = "block";
-        popupImg.src = img.src;
-      });
+    let current = 0;
+
+    function openPopup(index) {
+      current = index;
+      showImage();
+      popup.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closePopup() {
+      popup.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    function showImage() {
+      popupImg.style.opacity = "0";
+      popupImg.src = images[current].src;
+      popupImg.onload = () => { popupImg.style.opacity = "1"; };
+      if (popupImg.complete) popupImg.style.opacity = "1";
+      counter.textContent = (current + 1) + " / " + images.length;
+    }
+
+    function prev() {
+      current = (current - 1 + images.length) % images.length;
+      showImage();
+    }
+
+    function next() {
+      current = (current + 1) % images.length;
+      showImage();
+    }
+
+    images.forEach((img, i) => {
+      img.addEventListener("click", () => openPopup(i));
     });
 
-    closeBtn.onclick = () => popup.style.display = "none";
-    popup.onclick = () => popup.style.display = "none";
+    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); closePopup(); });
+    prevBtn.addEventListener("click",  (e) => { e.stopPropagation(); prev(); });
+    nextBtn.addEventListener("click",  (e) => { e.stopPropagation(); next(); });
+
+    popup.addEventListener("click", (e) => {
+      if (e.target === popup) closePopup();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!popup.classList.contains("active")) return;
+      if (e.key === "ArrowLeft")  prev();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "Escape")     closePopup();
+    });
+
+    let touchStartX = 0;
+    popup.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    popup.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        dx < 0 ? next() : prev();
+      }
+    }, { passive: true });
   </script>
 
 </body>
